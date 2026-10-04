@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            📚
+            <div>
+                <h2>LibraSys</h2>
+                <p>Library Management</p>
+            </div>
+        </div>
+
+        <nav>
+            <button class="nav-btn active" onclick="showSection('dashboard', this)">
+                🏠 Dashboard
+            </button>
+
+            <button class="nav-btn" onclick="showSection('books', this)">
+                📚 Books
+            </button>
+
+            <button class="nav-btn" onclick="showSection('students', this)">
+                👨‍🎓 Students
+            </button>
+
+            <button class="nav-btn" onclick="showSection('transactions', this)">
+                🔄 Issue / Return
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>Library Management System</p>
+            <small>DBMS Project</small>
+        </div>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- HEADER -->
+        <header class="topbar">
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p>Manage your library efficiently</p>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                System Online
+            </div>
+        </header>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="section active-section">
+
+            <div class="welcome">
+                <div>
+                    <h2>Welcome to Library Management System 📚</h2>
+                    <p>Monitor books, students and transactions from one place.</p>
+                </div>
+            </div>
+
+
+            <!-- STAT CARDS -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">📚</div>
+                    <div>
+                        <p>Total Books</p>
+                        <h2 id="totalBooks">0</h2>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">📖</div>
+                    <div>
+                        <p>Available Copies</p>
+                        <h2 id="availableCopies">0</h2>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">👨‍🎓</div>
+                    <div>
+                        <p>Total Students</p>
+                        <h2 id="totalStudents">0</h2>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">🔄</div>
+                    <div>
+                        <p>Currently Issued</p>
+                        <h2 id="issuedBooks">0</h2>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- RECENT TRANSACTIONS -->
+            <div class="card">
+
+                <div class="card-header">
+                    <div>
+                        <h2>Recent Transactions</h2>
+                        <p>Latest book issue and return activities</p>
+                    </div>
+
+                    <button class="small-btn" onclick="loadDashboard()">
+                        ↻ Refresh
+                    </button>
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Book</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="dashboardTransactions">
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= BOOKS ================= -->
+
+        <section id="books" class="section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Books</h2>
+                    <p>View all books available in the library.</p>
+                </div>
+
+                <button class="small-btn" onclick="loadBooks()">
+                    ↻ Refresh
+                </button>
+            </div>
+
+
+            <div class="search-box">
+                🔍
+                <input
+                    type="text"
+                    id="bookSearch"
+                    placeholder="Search books by title, author or category..."
+                    onkeyup="filterBooks()"
+                >
+            </div>
+
+
+            <div class="card">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Book Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Availability</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="booksTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= STUDENTS ================= -->
+
+        <section id="students" class="section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Students</h2>
+                    <p>Manage registered library students.</p>
+                </div>
+
+                <button class="primary-btn" onclick="openStudentForm()">
+                    + Add Student
+                </button>
+            </div>
+
+
+            <!-- ADD STUDENT FORM -->
+
+            <div class="card form-card" id="studentForm">
+
+                <div class="card-header">
+                    <div>
+                        <h2>Add New Student</h2>
+                        <p>Enter student details below.</p>
+                    </div>
+
+                    <button class="close-btn" onclick="closeStudentForm()">✕</button>
+                </div>
+
+                <form onsubmit="addStudent(event)">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Student Name</label>
+                            <input
+                                type="text"
+                                id="studentName"
+                                placeholder="Enter student name"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label>Department</label>
+                            <input
+                                type="text"
+                                id="studentDepartment"
+                                placeholder="Example: ECE"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input
+                                type="text"
+                                id="studentPhone"
+                                placeholder="Enter phone number"
+                                required
+                            >
+                        </div>
+
+                    </div>
+
+                    <button class="primary-btn" type="submit">
+                        Add Student
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- STUDENTS TABLE -->
+
+            <div class="card">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="studentsTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= ISSUE / RETURN ================= -->
+
+        <section id="transactions" class="section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Issue / Return Books</h2>
+                    <p>Manage book circulation.</p>
+                </div>
+            </div>
+
+
+            <!-- ISSUE FORM -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <div>
+                        <h2>Issue a Book</h2>
+                        <p>Assign a book to a student.</p>
+                    </div>
+                </div>
+
+                <form onsubmit="issueBook(event)">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label>Student</label>
+
+                            <select id="issueStudent" required>
+                                <option value="">Select Student</option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Book</label>
+
+                            <select id="issueBook" required>
+                                <option value="">Select Book</option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Due Date</label>
+
+                            <input
+                                type="date"
+                                id="dueDate"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <button class="primary-btn" type="submit">
+                        📖 Issue Book
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- TRANSACTION HISTORY -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Transaction History</h2>
+                        <p>All issued and returned books.</p>
+                    </div>
+
+                    <button class="small-btn" onclick="loadIssues()">
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Book</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="issuesTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- MESSAGE BOX -->
+
+<div id="messageBox"></div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
