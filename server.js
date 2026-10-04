@@ -25,7 +25,7 @@ app.use(express.json());
 // This tells Express to use the public folder
 // for HTML, CSS and JavaScript files.
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname));
 
 
 // =====================================================
@@ -71,7 +71,7 @@ db.connect((err) => {
 app.get("/", (req, res) => {
 
     res.sendFile(
-        path.join(__dirname, "public", "index.html")
+        path.join(__dirname, "index.html")
     );
 
 });
